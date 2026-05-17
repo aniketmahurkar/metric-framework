@@ -1,0 +1,28 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pyyaml
+      - name: Check layer direction
+        run: python linting/check_layer_direction.py .
+      - name: Check source usage
+        run: python linting/check_source_usage.py .
+      - name: Check model length
+        run: python linting/check_model_length.py . 200
+      - name: Check column descriptions
+        run: python linting/check_column_descriptions.py .
+      - name: Validate KPI definitions
+        run: python scripts/validate_kpis.py kpi_definitions/
+      - name: Generate dictionary (smoke test)
+        run: python scripts/generate_dictionary.py kpi_definitions/ > /dev/null
