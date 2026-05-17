@@ -1,0 +1,21 @@
+# KPI Definition Schema
+# Each KPI file should follow this structure.
+
+kpi:
+  name: ""                    # Human-readable KPI name
+  code: ""                    # Short code (e.g., CES, AHT, CSAT)
+  description: ""             # What this metric measures
+  formula: ""                 # SQL expression or description of calculation
+  source_table: ""            # Primary table
+  date_field: ""              # Date column for time-series aggregation
+  grain: ""                   # daily | weekly | monthly
+  aggregation:
+    first_level: ""           # e.g., AVG per contact
+    second_level: ""          # e.g., AVG of daily averages (LOD pattern)
+  filters:                    # Exclusion filters
+    - column: ""
+      operator: ""            # =, !=, in, not_in, is_null, is_not_null
+      value: ""
+  dimensions: []              # Columns to slice by
+  gotchas: []                 # Known pitfalls
+  owner: ""                   # Team or person responsible

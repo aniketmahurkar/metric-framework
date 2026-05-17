@@ -1,0 +1,27 @@
+kpi:
+  name: "Average Handle Time"
+  code: "AHT"
+  description: "Average duration of customer interactions in seconds"
+  formula: "AVG(handle_time_seconds)"
+  source_table: "contacts"
+  date_field: "contact_date"
+  grain: "daily"
+  aggregation:
+    first_level: "SUM(talk_time + hold_time + wrap_time) per contact"
+    second_level: "AVG across contacts in period"
+  filters:
+    - column: "contact_type"
+      operator: "in"
+      value: "['inbound', 'outbound']"
+    - column: "handle_time_seconds"
+      operator: ">"
+      value: "0"
+  dimensions:
+    - channel
+    - queue
+    - agent_id
+  gotchas:
+    - "Exclude zero-duration contacts (system artifacts)"
+    - "handle_time = talk_time + hold_time + wrap_time (not just talk)"
+    - "Transfers create multiple contact records — deduplicate by interaction_id"
+  owner: "Workforce Management"

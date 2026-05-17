@@ -1,0 +1,27 @@
+kpi:
+  name: "Customer Effort Score"
+  code: "CES"
+  description: "Average effort score from post-interaction surveys (1-7 scale)"
+  formula: "AVG(effort_score)"
+  source_table: "surveys"
+  date_field: "survey_date"
+  grain: "daily"
+  aggregation:
+    first_level: "AVG per contact_id"
+    second_level: "AVG of daily averages"
+  filters:
+    - column: "survey_type"
+      operator: "="
+      value: "post_interaction"
+    - column: "effort_score"
+      operator: "is_not_null"
+      value: ""
+  dimensions:
+    - channel
+    - product_line
+    - agent_team
+  gotchas:
+    - "Must exclude null scores — partial submissions skew results"
+    - "Two-step LOD: average per contact first, then average across day"
+    - "Survey_date != interaction_date; use survey_date for trending"
+  owner: "CX Analytics"
